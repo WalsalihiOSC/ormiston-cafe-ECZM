@@ -5,17 +5,33 @@ import tkinter
 from tkinter.scrolledtext import *
 import tkinter as tk
 
-
 class CafeInterface:
     def __init__(self, parent):
         self.DailyOrders = []
+
         """Main frame of the cafe interface"""
         self.main_cafeFrame = Frame(parent, height = 600, width = 1000)
         self.main_cafeFrame.grid(column = 0, row = 0)
         self.main_cafeFrame.grid_propagate(0)
 
+        """Creating frames for each menu category"""
+        self.cafeFrame = Frame(self.main_cafeFrame, height = 600, width = 1000)
+
+        self.main_menuFrame = Frame(self.cafeFrame, height = 600, width = 700)
+        self.main_menuFrame.grid(column = 1, row = 0)
+
+        self.coffeeFrame = Frame(self.main_menuFrame, height = 600, width = 700)
+        self.sandwichFrame = Frame(self.main_menuFrame, height = 600, width = 700)
+        self.dessertFrame = Frame(self.main_menuFrame, height = 600, width = 700)
+        self.sidesFrame = Frame(self.main_menuFrame, height = 600, width = 700)
+
+        for frame in (self.cafeFrame, self.coffeeFrame, self.sandwichFrame, self.dessertFrame, self.sidesFrame):
+            frame.grid(column = 0, row = 0, sticky = NSEW)
+        
+        self.show_frame(self.cafeFrame)
+
         """Order selecting frame will be on top of the main cafe frame"""
-        self.orderSelecting_Frame = Frame(self.main_cafeFrame, height = 600, width =300, bg = "#e3cbb3")
+        self.orderSelecting_Frame = Frame(self.cafeFrame, height = 600, width =300, bg = "#e3cbb3")
         self.orderSelecting_Frame.grid(column = 0, row = 0)
         self.orderSelecting_Frame.grid_propagate(0)
 
@@ -46,27 +62,16 @@ class CafeInterface:
         self.l2 = Label(self.orderSelecting_Frame, text = "Total: $_____", bg = "#e3cbb3", font = "None, 15")
         self.l2.grid(column = 0, row = 3, sticky = E, padx = 30, pady = (5, 0))
 
-        self.b1 = Button(self.orderSelecting_Frame, text = "Append Orders", command = lambda: self.append_orders(self.selected_coffee, self.selected_sandwich, self.selected_dessert, self.selected_sides, self.e1, self.e2, self.e3, self.e4))
+        self.b1 = Button(self.orderSelecting_Frame, text = "Append Orders")
         self.b1.grid(column = 0, row = 4, sticky = W, padx = 30)
 
-        self.b2 = Button(self.orderSelecting_Frame, text = "Confirm Order Details", state = "disabled", command = self.append_to_orderDisplay)
+        self.b2 = Button(self.orderSelecting_Frame, text = "Confirm Order Details", state = "disabled")
         self.b2.grid(column = 0, row = 5, sticky = W, padx = 30, pady = (5, 5))
 
         self.b3 = Button(self.orderSelecting_Frame, text = "Reset Orders")
         self.b3.grid(column = 0, row = 6, sticky = W, padx = 30)
 
         #---------------------------------------------------------------------------------------------------------------
-        """Creating frames for each menu category"""
-        self.main_menuFrame = Frame(self.main_cafeFrame, height = 600, width = 700)
-        self.main_menuFrame.grid(column = 1, row = 0)
-
-        self.coffeeFrame = Frame(self.main_menuFrame, height = 600, width = 700)
-        self.sandwichFrame = Frame(self.main_menuFrame, height = 600, width = 700)
-        self.dessertFrame = Frame(self.main_menuFrame, height = 600, width = 700)
-        self.sidesFrame = Frame(self.main_menuFrame, height = 600, width = 700)
-
-        for frame in (self.coffeeFrame, self.sandwichFrame, self.dessertFrame, self.sidesFrame):
-            frame.grid(column = 0, row = 0, sticky = NSEW)
 
         """"""""""""""""""""""""""""""""""""""""""""""""
         """ Creating widgets for each category frame """  
@@ -87,7 +92,6 @@ class CafeInterface:
         self.sub_headers = Frame(self.coffeeheader, height = 100, width = 300)
         self.sub_headers.place(x = 35, y = 180)
 
-        ###still need to work on label event binding, if not then change label to button instead
         self.sh_s = Button(self.sub_headers, text = "Sandwiches", font = "None 12 underline", command = lambda: self.show_frame(self.sandwichFrame))
         self.sh_s.grid(column = 0, row = 0, sticky = NW, pady = 5)
         
@@ -197,11 +201,11 @@ class CafeInterface:
         self.sandwich_l = [str(x) for x in range(len(self.sandwichList))]
         self.selected_sandwich = []
             
-        self.cb1 = []
+        self.cb2 = []
         for i in range(len(self.sandwichList)):
             self.sandwich_l[i] = IntVar(0)
-            self.cb1.append(Checkbutton(self.f1, text = self.sandwichList[i], variable = self.sandwich_l[i], onvalue = 1, offvalue = 0, command = lambda x = self.sandwichList[i], y = self.sandwich_l[i]: self.add_remove_sandwich(x,y)))
-            self.cb1[i].grid(column = 0, sticky = W, ipadx = 10, ipady = 5)
+            self.cb2.append(Checkbutton(self.f1, text = self.sandwichList[i], variable = self.sandwich_l[i], onvalue = 1, offvalue = 0, command = lambda x = self.sandwichList[i], y = self.sandwich_l[i]: self.add_remove_sandwich(x,y)))
+            self.cb2[i].grid(column = 0, sticky = W, ipadx = 10, ipady = 5)
 
         self.f2 = Frame(self.sandwichheader)
         self.f2.place(x = 570, y = 100)
@@ -276,11 +280,11 @@ class CafeInterface:
         self.dessert_l = [str(x) for x in range(len(self.dessertList))]
         self.selected_dessert = []
             
-        self.cb1 = []
+        self.cb3 = []
         for i in range(len(self.dessertList)):
             self.dessert_l[i] = IntVar(0)
-            self.cb1.append(Checkbutton(self.f1, text = self.dessertList[i], variable = self.dessert_l[i], onvalue = 1, offvalue = 0, command = lambda x = self.dessertList[i], y = self.dessert_l[i]: self.add_remove_dessert(x,y)))
-            self.cb1[i].grid(column = 0, sticky = W, ipadx = 10, ipady = 5)
+            self.cb3.append(Checkbutton(self.f1, text = self.dessertList[i], variable = self.dessert_l[i], onvalue = 1, offvalue = 0, command = lambda x = self.dessertList[i], y = self.dessert_l[i]: self.add_remove_dessert(x,y)))
+            self.cb3[i].grid(column = 0, sticky = W, ipadx = 10, ipady = 5)
 
         self.f2 = Frame(self.dessertheader)
         self.f2.place(x = 570, y = 100)
@@ -355,11 +359,11 @@ class CafeInterface:
         self.sides_l = [str(x) for x in range(len(self.sidesList))]
         self.selected_sides = []
             
-        self.cb1 = []
+        self.cb4 = []
         for i in range(len(self.sidesList)):
             self.sides_l[i] = IntVar(0)
-            self.cb1.append(Checkbutton(self.f1, text = self.sidesList[i], variable = self.sides_l[i], onvalue = 1, offvalue = 0, command = lambda x = self.sidesList[i], y = self.sides_l[i]: self.add_remove_sides(x,y)))
-            self.cb1[i].grid(column = 0, sticky = W, ipadx = 10, ipady = 5)
+            self.cb4.append(Checkbutton(self.f1, text = self.sidesList[i], variable = self.sides_l[i], onvalue = 1, offvalue = 0, command = lambda x = self.sidesList[i], y = self.sides_l[i]: self.add_remove_sides(x,y)))
+            self.cb4[i].grid(column = 0, sticky = W, ipadx = 10, ipady = 5)
 
         self.f2 = Frame(self.sidesheader)
         self.f2.place(x = 570, y = 100)
@@ -390,98 +394,49 @@ class CafeInterface:
 
         self.previous_btn = Button(self.sidesheader, text = "<", command = lambda: self.show_frame(self.dessertFrame))
         self.previous_btn.place(x = 340, y = 400)
+
+        my_menu = Menu()
+        root.configure(menu = my_menu)
+
+        options_menu = Menu(my_menu, tearoff = False)
+        my_menu.add_cascade(label = "Cafe Manager", menu = options_menu)
+        options_menu.add_command(label = "Student Tracking Orders", command = self.studentTrackingOrders)
         
     def show_frame(self, frame):
         frame.tkraise()
+
+    def studentTrackingOrders(self):
+        self.trackingFrame = Frame(self.cafeFrame, height = 600, width = 1000, bg = "#ede0d4")
+        self.trackingFrame.grid(column = 0, row = 0)
+        self.trackingFrame.grid_propagate(0)
+
+        self.sto_banner = Canvas(self.trackingFrame, height = 180, width = 1000, highlightthickness = 0)
+        self.sto_banner.grid(column = 0, row = 0, sticky = NW)
+
+        self.sto_banner.main_sto_banner = PhotoImage(file = "cafeImages/studentTracking.png")
+        self.sto_banner.create_image(0, 0, anchor = NW, image = self.sto_banner.main_sto_banner)
+
+        self.sto_Label = Label(self.trackingFrame, text = "Student Tracking Orders", font = "None 15 bold", bg = "#ede0d4")
+        self.sto_Label.grid(column = 0, row = 1, sticky = NW, padx = 65, pady = 20)
+
+        self.listFrame = Frame(self.trackingFrame, height = 300, width = 900)
+        self.listFrame.grid(column = 0, row = 2)
+
+        self.l1 = Label(self.listFrame, text = "(Full) Name", font = "None 13 underline", bg = "#ede0d4")
+        self.l1.grid(column = 0, row = 0)
+
+        self.l2 = Label(self.listFrame, text = "Orders", font = "None 13 underline", bg = "#ede0d4")
+        self.l2.grid(column = 1, row = 0)
+
+        self.l3 = Label(self.listFrame, text = "Quantities", font = "None 13 underline", bg = "#ede0d4")
+        self.l3.grid(column = 2, row = 0)
+
+        self.l4 = Label(self.listFrame, text = "Total Cost", font = "None 13 underline", bg = "#ede0d4")
+        self.l4.grid(column = 3, row = 0)
     
-    def append_to_orderDisplay(self):
-        self.main_menuFrame.destroy()
-        self.orderSelecting_Frame.destroy()
 
-        self.orderDisplay = Frame(self.main_cafeFrame, height = 600, width = 1000, bg = "#ede0d4")
-        self.orderDisplay.grid(column = 0, row = 0)
-        self.orderDisplay.grid_propagate(0)
-
-        self.obanner = Canvas(self.orderDisplay, height = 180, width = 1000, bg = "#ede0d4", highlightthickness = 0)
-        self.obanner.grid(columnspan = 4, row = 0)
-
-        self.obanner.oimage = PhotoImage(file = "cafeImages/orderdetails.png")
-        self.obanner.create_image(0, 0, anchor = NW, image = self.obanner.oimage)
-
-        self.Fname = Label(self.orderDisplay, text = "First Name:", font = "None 12 bold", bg = "#ede0d4")
-        self.Fname.grid(column = 0, row = 1, sticky = NW, padx = (65, 10), pady = (20, 0))
-
-        self.Lname = Label(self.orderDisplay, text = "Last Name:", font = "None 12 bold", bg = "#ede0d4")
-        self.Lname.grid(column = 1, row = 1, sticky = NW, pady = (20, 0))
-
-        self.yrlvl = Label(self.orderDisplay, text = "Year Level:", font = "None 12 bold", bg = "#ede0d4")
-        self.yrlvl.grid(column = 2, row = 1, sticky = NW, pady = (20, 0))
-
-        self.contact = Label(self.orderDisplay, text = "Contact Detail - Email:", font = "None 12 bold", bg = "#ede0d4")
-        self.contact.grid(column = 3, row = 1, sticky = NW, pady = (20, 0))
-
-        self.first_name = Entry(self.orderDisplay)
-        self.first_name.grid(column = 0, row = 2, sticky = NW, padx = (65, 0))
-
-        self.last_name = Entry(self.orderDisplay)
-        self.last_name.grid(column = 1, row = 2, sticky = NW)
-
-        self.year_level = Entry(self.orderDisplay, width = 10)
-        self.year_level.grid(column = 2, row = 2, sticky = NW)
-        
-        self.contactdetail = Entry(self.orderDisplay)
-        self.contactdetail.grid(column = 3, row = 2, sticky = NW)
-
-        self.Label_1 = Label(self.orderDisplay, text = "Orders:", bg = "#ede0d4")
-        self.Label_1.grid(column = 0, row = 3, sticky = NW, padx = (65, 0), pady = (20, 7))
-
-        #-----
-        self.f4 = Frame(self.orderDisplay, height = 200, width = 615, bg = "#ede0d4")
-        self.f4.grid(columnspan = 4, row = 4, sticky = NW, padx = (65, 0))
-        self.f4.grid_propagate(0)
-
-        """Quantities"""
-        self.f5 = Frame(self.f4, height = 200, width = 100, bg = "#ede0d4")
-        self.f5.grid(column = 0, row = 0, sticky = NW, padx = (0, 10))
-        self.f5.grid_propagate(0)
-
-        """Orders"""
-        self.f6 = Frame(self.f4, height = 200, width = 200, bg = "#ede0d4")
-        self.f6.grid(column = 1, row = 0, sticky = NW, padx = (10, 0))
-        self.f6.grid_propagate(0)
-
-        """Costs"""
-        self.f7 = Frame(self.f4, height = 200, width = 55, bg = "#ede0d4")
-        self.f7.grid(column = 2, row = 0, sticky = NE, padx = (240, 0))
-        self.f7.grid_propagate(0)
-
-        """Other widgets on the payment frame"""
-        self.l5 = Label(self.orderDisplay, text = "Total Cost: $", bg = "#ede0d4")
-        self.l5.place(x = 550, y = 500)
-
-        self.l6 = Label(self.orderDisplay, text = "Amount Paying:", bg = "#ede0d4")
-        self.l6.place(x = 830, y = 300)
-
-        self.amount = Entry(self.orderDisplay, width = 5)
-        self.amount.place(x = 880, y = 325)
-
-        self.l7 = Label(self.orderDisplay, text = "$:", bg = "#ede0d4")
-        self.l7.place(x = 855, y = 327)
-
-        self.confirmPayment = Button(self.orderDisplay, text = "Confirm Payment", command = self.confirmOrder)
-        self.confirmPayment.place(x = 825, y = 360)
-
-        self.exchange = Label(self.orderDisplay, text = "Exchanges: $", bg = "#ede0d4")
-        self.exchange.grid(column = 3, row = 4)
-
-        self.newOrder = Button(self.orderDisplay, text = "New Order")
-        self.newOrder.place(x = 870, y = 500)
-
-        self.cafeDailyOrders = CafeOrders(self.first_name.get(), self.last_name.get(), self.year_level.get(), self.contactdetail.get(), 0,0,0,0)
-
-        self.DailyOrders.append(self.cafeDailyOrders)
-
-
+      
+    
 class CafeMenuDetails:
     def __init__(self, banner, header, category, prices):
         self.banner = banner
@@ -489,6 +444,7 @@ class CafeMenuDetails:
         self.category = category
         self.prices = prices
     
+   
 class CafeOrders:
     def __init__(self, fName, lName, year, contact, order, price, quantity, totalPrice):
         self.fName = fName
@@ -500,6 +456,17 @@ class CafeOrders:
         self.quantity = quantity
         self.totalPrice = totalPrice
     
+    def check_blank(self):
+        pass
+
+    def check_int(self):
+        pass
+
+    def check_str(self):
+        pass
+
+
+
 #Main Routine
 if __name__ == "__main__":                        
     root = tk.Tk()
