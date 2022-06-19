@@ -688,6 +688,77 @@ class CafeInterface:
                 self.ordersDisplay.insert(tkinter.END, "\n")
                 self.ordersDisplay.insert(tkinter.END, "Please enter integers only for quantities wanted.")
     
+    def check_int(self, entry):
+        while entry.isdigit():
+            if True:
+                self.l9.configure(text = "*String values only")
+            break
+    
+    def check_str(self, entry):
+        if entry.isdigit():
+            pass
+        else:
+            self.l9.configure(text = "*Integer values only")
+    
+    def check_amount(self):
+        while True:
+            if self.amount.get().isdigit():
+                break
+            else:
+                self.l9.configure(text = "*Integers only")
+
+    def print_order_details(self):
+        order_count = 0
+        while order_count < len(self.totalOrders):
+            Label(self.f5, text = (self.totalOrders[order_count][0] + "x"), bg = "#ede0d4").grid(column = 0, row = order_count, sticky = W)
+            Label(self.f6, text = (self.totalOrders[order_count][1]), bg = "#ede0d4").grid(column = 0, row = order_count, sticky = W) 
+            Label(self.f7, text = "$" + (self.totalOrders[order_count][2]), bg = "#ede0d4").grid(column = 0, row = order_count, sticky = W)  
+            order_count +=  1
+    
+    def confirmOrder(self):
+        self.check_int(self.first_name.get())
+        self.check_int(self.last_name.get())
+        self.check_int(self.contactdetail.get())
+        self.check_str(self.year_level.get())
+
+        self.cafeDailyOrders = CafeOrders(self.first_name.get().capitalize(), self.last_name.get().capitalize(), self.year_level.get(), self.contactdetail.get(), orders, prices, quantities, total_price, self.totalOrders)
+        self.DailyOrders.append(self.cafeDailyOrders)
+
+        self.check_amount()
+
+        while True:
+            if int(float(self.amount.get())) >= int(float(total_price)):
+                exchange = int(float(self.amount.get())) - int(float(total_price))
+                self.l6.configure(text = "Amount Paid:")
+                self.l7.place(x = 880, y = 325)
+                self.l7.configure(text = "$" + self.amount.get())
+                self.l8.destroy()
+                
+                self.exchange.configure(text = "Exchanges: $" + "{:.2f}".format(int(exchange)))
+                self.append_to_file()
+                self.print_student_detail()
+                self.amount.destroy()
+                self.confirmPayment.destroy()
+                break
+            else:
+                self.exchange.configure(text = "* You have not paid enough")
+
+    def print_student_detail(self):
+        self.l1.grid(column = 0, row = 2, sticky = NW, padx = (65, 0))
+        self.l2.grid(column = 1, row = 2, sticky = NW)
+        self.l3.grid(column = 2, row = 2, sticky = NW)
+        self.l4.grid(column = 3, row = 2, sticky = NW)
+
+        self.l1.configure(text = self.first_name.get())
+        self.l2.configure(text = self.last_name.get())
+        self.l3.configure(text = self.year_level.get())
+        self.l4.configure(text = self.contactdetail.get())
+
+        self.first_name.destroy()
+        self.last_name.destroy()
+        self.year_level.destroy()
+        self.contactdetail.destroy()
+    
     
     
 
